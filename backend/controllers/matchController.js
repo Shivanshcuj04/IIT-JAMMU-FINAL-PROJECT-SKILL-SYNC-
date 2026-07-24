@@ -1,0 +1,68 @@
+const Match = require("../models/Match");
+
+// POST /api/matches   { receiverId, offeredSkillName, requestedSkillName, message }
+const sendMatchRequest = async (req, res) => {
+  const { receiverId, offeredSkillName, requestedSkillName, message } = req.body;
+  if (!receiverId || !offeredSkillName || !requestedSkillName) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+  if (String(receiverId) === String(req.user._id)) {
+    return res.status(400).json({ message: "Cannot match with yourself" });
+  }
+
+  const match = await Match.create({
+    requester: req.user._id,
+    receiver: receiverId,
+    offeredSkillName,
+    requestedSkillName,
+    message,
+  });
+
+  res.status(201).json({ match });
+};
+
+// GET /api/matches/me  -> all matches involving the logged-in user
+const getMyMatches = async (req, res) => {
+  const matches = await Match.find({
+    $or: [{ requester: req.user._id }, { receiver: req.user._id }],
+  })
+    .populate("requester", "name city averageRating")
+    .populate("receiver", "name city averageRating")
+    .sort({ createdAt: -1 });
+
+  res.json({ matches });
+};
+
+// PUT /api/matches/:id/respond   { status: "accepted" | "rejected" }
+const respondToMatch = async (req, res) => {
+  const { status } = req.body;
+  if (!["accepted", "rejected"].includes(status)) {
+    return res.status(400).json({ message: "status must be accepted or rejected" });
+  }
+
+  const match = await Match.findById(req.params.id);
+  if (!match) return res.status(404).json({ message: "Match not found" });
+  if (String(match.receiver) !== String(req.user._id)) {
+    return res.status(403).json({ message: "Only the receiver can respond to this match" });
+  }
+
+  match.status = status;
+  await match.save();
+  res.json({ match });
+};
+
+// PUT /api/matches/:id/complete
+const completeMatch = async (req, res) => {
+  const match = await Match.findById(req.params.id);
+  if (!match) return res.status(404).json({ message: "Match not found" });
+
+  const isParticipant =
+    String(match.requester) === String(req.user._id) || String(match.receiver) === String(req.user._id);
+  if (!isParticipant) return res.status(403).json({ message: "Not a participant in this match" });
+
+  match.status = "completed";
+  await match.save();
+  res.json({ match });
+};
+
+module.exports = { sendMatchRequest, getMyMatches, respondToMatch, completeMatch };
