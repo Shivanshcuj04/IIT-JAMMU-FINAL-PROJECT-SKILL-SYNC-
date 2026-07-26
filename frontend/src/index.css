@@ -1,404 +1,411 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+/* ==========================================================================
+   SkillSync — visual identity
+   Concept: a trade board. People pin what they can teach and what they
+   want to learn, the same way a corkboard notice works — so the palette,
+   the type, and the signature "swap" mark all come from that idea.
 
-* { box-sizing: border-box; }
+   Palette
+     --ink       #1B2A3D  deep navy — navbar, headings
+     --paper     #FAF7F0  warm paper background
+     --card      #FFFFFF  card surface
+     --line      #E7E1D2  hairline borders
+     --gold      #D9A441  primary accent — the "offer" side of a swap
+     --teal      #2C6E68  secondary accent — the "seek" side of a swap
+     --text      #22262B  body text
+     --muted     #6B7280  secondary text
+
+   Type
+     Display: "Fraunces"      — headings, brand mark
+     Body:    "Inter"         — everything else
+     Mono:    "IBM Plex Mono" — tags, labels, small caps data
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap");
 
 :root {
-  --ink: #6C5CE7;
-  --ink-dark: #5142c9;
-  --chalk: #ffffff;
-  --mustard: #FF6B6B;
-  --mustard-dark: #f04f4f;
-  --clay: #00B8A9;
-  --slate: #8B85A0;
-  --page-bg: #F7F6FB;
-  --text: #241F3D;
-  --error: #E0453C;
-  --success: #1FA97F;
-  --font-display: 'Poppins', sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --ink: #1b2a3d;
+  --ink-soft: #2a3d54;
+  --paper: #faf7f0;
+  --card: #ffffff;
+  --line: #e7e1d2;
+  --gold: #d9a441;
+  --gold-dark: #b9852a;
+  --teal: #2c6e68;
+  --teal-soft: #e4efee;
+  --text: #22262b;
+  --muted: #6b7280;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgba(27, 42, 61, 0.05);
+  --shadow-md: 0 10px 30px -12px rgba(27, 42, 61, 0.18);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   font-family: var(--font-body);
-  background: var(--page-bg);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle, rgba(27, 42, 61, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
   color: var(--text);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-.container { max-width: 900px; margin: 0 auto; padding: 24px; }
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+}
+h1 { font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 600; }
+h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 600; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+
+p { color: var(--text); }
+.container p { color: var(--muted); }
+
+a { color: var(--teal); }
+
+::selection { background: var(--gold); color: var(--ink); }
+
+:focus-visible {
+  outline: 2px solid var(--gold-dark);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------------------------------- Layout ---------------------------------- */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  animation: rise 0.5s ease both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* First heading in the page acts as the hero — give it room and a
+   swap-mark eyebrow so "Home" reads like a thesis, not a stub. */
+.container > h1:first-child {
+  position: relative;
+  padding-top: 34px;
+}
+.container > h1:first-child::before {
+  content: "TEACH ⇄ LEARN";
+  position: absolute;
+  top: 0; left: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--teal);
+}
+
+.container > h1:first-child + p {
+  font-size: 1.15rem;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+/* ---------------------------------- Navbar ---------------------------------- */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 28px;
+  background: var(--ink);
+  border-bottom: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow-md);
+}
+
+.navbar > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.navbar a {
+  margin-right: 4px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.navbar a:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+
+/* Brand mark — the first link in the navbar's first group ("SkillSync").
+   Kept separate from the nav links above so it can carry the display
+   font and swap-mark glyph without dragging Explore / Profile with it. */
+.navbar > div:first-child > a:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 20px;
+  padding: 0;
+  color: #fff;
+}
+.navbar > div:first-child > a:first-child:hover { background: none; color: #fff; }
+.navbar > div:first-child > a:first-child strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+}
+.navbar > div:first-child > a:first-child::before {
+  content: "⇄";
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.navbar button {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 8px 16px;
+}
+.navbar button:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* ----------------------------------- Cards ----------------------------------- */
 
 .card {
-  background: #fff; border: 1px solid #ece9f7; border-radius: 12px;
-  padding: 16px; margin-bottom: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: #d8cfb4;
+}
+
+/* Empty / placeholder states — e.g. "No mutual matches yet". Add
+   className="empty-state" to that message for the full treatment;
+   it degrades gracefully as a plain paragraph if you skip that. */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.5);
+}
+.empty-state::before {
+  content: "⇄";
+  display: block;
+  font-size: 22px;
+  color: var(--gold-dark);
+  margin-bottom: 10px;
+}
+
+/* ----------------------------------- Forms ----------------------------------- */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 400px;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: -8px;
 }
 
 input, select, textarea, button {
-  font: inherit; padding: 9px 11px; border-radius: 8px; border: 1px solid #ddd;
+  font: inherit;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--line);
 }
+
+input, select, textarea {
+  background: var(--card);
+  color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:hover, select:hover, textarea:hover { border-color: #cfc6a8; }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.22);
+}
+textarea { resize: vertical; min-height: 90px; }
+
+/* ---------------------------------- Buttons ---------------------------------- */
 
 button {
-  background: var(--ink); color: #fff; border: none; cursor: pointer; font-weight: 600;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 11px 22px;
+  transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-sm);
 }
-button:hover { background: var(--ink-dark); }
+button:hover { background: var(--gold-dark); box-shadow: var(--shadow-md); }
+button:active { transform: translateY(1px); }
+button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Optional secondary style — add className="btn-outline" to any
+   <button> you want styled as a quiet, non-primary action. */
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  box-shadow: none;
+}
+.btn-outline:hover { background: var(--card); border-color: var(--ink); }
+
+/* ----------------------------------- Badges ----------------------------------- */
 
 .badge {
-  display: inline-block; background: #EEEBFB; color: var(--ink-dark);
-  padding: 3px 10px; border-radius: 20px; font-size: 12px; margin-right: 6px; font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--teal-soft);
+  color: var(--teal);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-right: 6px;
+  margin-bottom: 4px;
 }
 
-form { display: flex; flex-direction: column; gap: 10px; max-width: 400px; }
+/* Optional modifiers — use className="badge badge-offer" for a skill
+   someone teaches, and className="badge badge-seek" for one they want
+   to learn, to pick up the gold / teal swap coding used elsewhere. */
+.badge-offer { background: rgba(217, 164, 65, 0.16); color: var(--gold-dark); }
+.badge-seek  { background: var(--teal-soft); color: var(--teal); }
 
-/* ===== Navbar ===== */
-.navbar {
-  background: var(--ink);
-  padding: 14px 32px;
-  display: flex; justify-content: space-between; align-items: center;
+/* ------------------------------------ Hero (Home) ------------------------------------ */
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 56px;
+  flex-wrap: wrap-reverse;
+  padding-top: 32px;
 }
 
-.navbar-left, .navbar-right { display: flex; align-items: center; gap: 20px; }
-
-.navbar-brand {
-  font-family: var(--font-display);
-  font-size: 20px; font-weight: 700; color: #fff; text-decoration: none; margin-right: 8px;
+.hero-copy { flex: 1 1 360px; }
+.hero-copy h1 { position: relative; padding-top: 30px; }
+.hero-copy h1::before {
+  content: "TEACH ⇄ LEARN";
+  position: absolute;
+  top: 0; left: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--teal);
+}
+.hero-copy p {
+  font-size: 1.15rem;
+  color: var(--muted);
+  max-width: 46ch;
+  margin-bottom: 26px;
 }
 
-.navbar-links { display: flex; gap: 4px; }
-
-.navbar-link {
-  color: #E7E3FA; font-size: 14px; font-weight: 600;
-  padding: 7px 12px; border-radius: 8px; text-decoration: none;
+/* Signature element: two "trade cards" mid-swap. Purely decorative
+   (aria-hidden), so it's safe to reuse the .card look without
+   conflicting with real skill cards elsewhere on the site. */
+.swap-demo {
+  flex: 1 1 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
 }
-
-.navbar-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
-.navbar-link.active { background: var(--mustard); color: #fff; }
-
-.navbar-logout {
-  background: transparent; border: 1.5px solid rgba(255,255,255,0.5); color: #fff;
-  font-size: 13px; padding: 7px 16px;
+.swap-demo .card {
+  width: 150px;
+  text-align: center;
+  margin-bottom: 0;
+  transform: rotate(-4deg);
 }
-.navbar-logout:hover { background: rgba(255,255,255,0.15); }
-
-.navbar-cta { background: var(--mustard); color: #fff; padding: 8px 18px; font-size: 13px; }
-.navbar-cta:hover { background: var(--mustard-dark); }
-
-/* ===== Home hero ===== */
-.home-hero {
-  background: linear-gradient(135deg, var(--ink), #8B7CF0);
-  color: #fff; padding: 72px 24px 96px; border-radius: 0 0 32px 32px; text-align: center;
+.swap-demo .card:last-child { transform: rotate(4deg); }
+.swap-demo:hover .card { transform: rotate(0deg) translateY(-4px); }
+.swap-demo .card h3 { margin: 10px 0 0; font-size: 1rem; }
+.swap-arrow {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  animation: pulse 2.6s ease-in-out infinite;
 }
-
-.home-eyebrow {
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: #FFD86B; margin: 0 0 16px;
-}
-
-.home-title {
-  font-family: var(--font-display); font-weight: 700; font-size: clamp(48px, 8vw, 84px);
-  line-height: 1; margin: 0 0 18px;
-}
-
-.home-subhead { font-size: 18px; color: #EDEAFB; max-width: 480px; margin: 0 auto 32px; }
-
-.home-cta-row { display: flex; gap: 20px; justify-content: center; align-items: center; margin-bottom: 56px; }
-
-.home-cta-row button { background: var(--mustard); color: #fff; padding: 12px 26px; font-size: 15px; }
-.home-cta-row button:hover { background: var(--mustard-dark); }
-
-.home-secondary-cta {
-  color: #fff; text-decoration: none; font-size: 15px;
-  border-bottom: 1.5px solid rgba(255,255,255,0.5); padding-bottom: 2px;
-}
-.home-secondary-cta:hover { border-color: #FFD86B; }
-
-.swap-ticket {
-  position: relative; max-width: 620px; margin: 0 auto; background: #fff; color: var(--text);
-  border-radius: 16px; padding: 28px 32px; display: flex; align-items: center;
-  justify-content: space-between; gap: 16px; box-shadow: 0 24px 48px -20px rgba(40, 20, 90, 0.35);
-  animation: ticket-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes ticket-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.swap-ticket-hole {
-  position: absolute; top: 50%; transform: translateY(-50%); width: 20px; height: 20px;
-  border-radius: 50%; background: var(--page-bg);
-}
-.swap-ticket-hole-left { left: -10px; }
-.swap-ticket-hole-right { right: -10px; }
-
-.swap-ticket-col { flex: 1; text-align: left; }
-
-.swap-ticket-label {
-  display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--slate); margin-bottom: 10px;
-}
-
-.swap-ticket-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-
-.swap-tag {
-  font-family: var(--font-mono); background: #F2EEFC; border: none; color: var(--ink-dark); font-weight: 600;
-}
-
-.swap-ticket-divider {
-  flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  border-left: 1px dashed #ddd; border-right: 1px dashed #ddd; padding: 0 18px;
-}
-
-.swap-ticket-arrow { font-size: 24px; color: var(--mustard); transition: transform 0.3s ease; }
-.swap-ticket:hover .swap-ticket-arrow { transform: rotate(180deg); }
-
-.swap-ticket-code { font-family: var(--font-mono); font-size: 10px; color: var(--slate); white-space: nowrap; }
-
-.home-process { padding: 56px 24px; }
-
-.process-list { list-style: none; margin: 0 auto; padding: 0; max-width: 640px; }
-
-.process-row {
-  display: flex; gap: 24px; align-items: flex-start; padding: 22px 0; border-bottom: 1px solid #e8e4f5;
-}
-.process-row:last-child { border-bottom: none; }
-
-.process-num {
-  font-family: var(--font-mono); font-size: 13px; color: #fff; background: var(--ink);
-  border-radius: 8px; padding: 4px 9px; flex-shrink: 0;
-}
-
-.process-title { font-family: var(--font-display); font-weight: 600; font-size: 20px; margin: 0 0 6px; }
-.process-copy { margin: 0; color: var(--slate); font-size: 15px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .swap-ticket { animation: none; }
-  .swap-ticket:hover .swap-ticket-arrow { transform: none; }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
 }
 
 @media (max-width: 640px) {
-  .swap-ticket { flex-direction: column; }
-  .swap-ticket-divider {
-    border-left: none; border-right: none; border-top: 1px dashed #ddd; border-bottom: 1px dashed #ddd;
-    padding: 12px 0; flex-direction: row;
-  }
-  .swap-ticket-hole { display: none; }
+  .hero { flex-direction: column-reverse; text-align: center; padding-top: 12px; }
+  .hero-copy p { margin-left: auto; margin-right: auto; }
+  .hero-copy h1::before { left: 50%; transform: translateX(-50%); }
 }
 
-/* ===== Auth pages ===== */
-.auth-page { min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
+/* ----------------------------------- Match grid (Explore) ----------------------------------- */
 
-.auth-card {
-  background: #fff; border: none; border-top: 5px solid var(--mustard); border-radius: 16px;
-  padding: 36px 32px; max-width: 400px; width: 100%; box-shadow: 0 12px 32px -16px rgba(40,20,90,0.2);
-  animation: ticket-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+.match-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
 }
+.match-grid .card { margin-bottom: 0; }
 
-.auth-eyebrow {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--clay); margin: 0 0 8px;
-}
-
-.auth-title { font-family: var(--font-display); font-weight: 700; font-size: 26px; margin: 0 0 24px; color: var(--ink); }
-
-.auth-label { display: block; font-size: 13px; font-weight: 600; color: var(--slate); margin: 14px 0 6px; }
-
-.auth-card form { gap: 0; max-width: none; }
-
-.auth-card input { width: 100%; border: 1.5px solid #e5e0f5; transition: border-color 0.15s ease; }
-.auth-card input:focus { outline: none; border-color: var(--ink); }
-
-.auth-password-row { display: flex; gap: 8px; }
-.auth-password-row input { flex: 1; }
-
-.auth-toggle-btn {
-  background: #F2EEFC; color: var(--ink-dark); border: none; font-size: 13px; font-weight: 600;
-  padding: 8px 14px; white-space: nowrap;
-}
-.auth-toggle-btn:hover { background: #E7E1FA; }
-
-.auth-error { background: #FCEAEA; color: var(--error); font-size: 13px; padding: 8px 12px; border-radius: 8px; margin: 14px 0 0; font-weight: 500; }
-
-.auth-submit { width: 100%; margin-top: 22px; background: var(--ink); padding: 12px; font-size: 15px; }
-.auth-submit:hover { background: var(--ink-dark); }
-.auth-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.auth-switch { text-align: center; font-size: 14px; color: var(--slate); margin-top: 20px; }
-.auth-switch a { color: var(--mustard-dark); font-weight: 700; text-decoration: none; }
-.auth-switch a:hover { text-decoration: underline; }
-
-/* ===== Explore page ===== */
-.explore-page { padding-top: 32px; }
-
-.explore-eyebrow {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--clay); margin: 0 0 6px;
-}
-
-.explore-title { font-family: var(--font-display); font-weight: 700; font-size: 32px; margin: 0 0 24px; color: var(--ink); }
-
-.explore-status { padding: 10px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; font-weight: 500; }
-.explore-status.success { background: #E4F7EF; color: var(--success); }
-.explore-status.error { background: #FCEAEA; color: var(--error); }
-
-.explore-loading { font-family: var(--font-mono); font-size: 13px; color: var(--slate); }
-
-.explore-empty {
-  background: #fff; border: 2px dashed #E5E0F5; border-radius: 16px; padding: 40px 24px; text-align: center;
-}
-.explore-empty h3 { font-family: var(--font-display); margin: 0 0 8px; color: var(--ink); }
-.explore-empty p { color: var(--slate); margin: 0; }
-
-.explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-
-.match-card { background: #fff; border: none; border-radius: 16px; padding: 18px 20px; box-shadow: 0 6px 20px -12px rgba(40,20,90,0.25); }
-
-.match-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-
-.match-avatar {
-  width: 42px; height: 42px; border-radius: 50%; background: var(--ink); color: #FFD86B;
-  display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);
-  font-size: 13px; font-weight: 700; flex-shrink: 0;
-}
-
-.match-name { font-family: var(--font-display); font-weight: 600; font-size: 17px; margin: 0; color: var(--ink); }
-.match-meta { font-size: 13px; color: var(--slate); margin: 2px 0 0; }
-.match-badges { margin-bottom: 12px; }
-
-.match-swap-row { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 14px; }
-.match-swap-col { flex: 1; }
-.match-swap-col select { width: 100%; font-size: 13px; }
-.match-swap-arrow { color: var(--mustard); font-size: 18px; padding-bottom: 8px; }
-
-.match-request-btn { width: 100%; background: var(--ink); }
-.match-request-btn:hover { background: var(--ink-dark); }
-.match-request-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* ===== Category tag colors ===== */
-.cat-badge {
-  display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px;
-  font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; margin-right: 6px;
-}
-.cat-tech { background: #E3F0FF; color: #1266C4; }
-.cat-music { background: #FFE7F1; color: #C4297A; }
-.cat-art { background: #FFF3DA; color: #B5790A; }
-.cat-language { background: #DEFAF4; color: #0B8C77; }
-.cat-general { background: #EEEBFB; color: #5B4FCE; }
-
-.type-badge {
-  display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
-}
-.type-teach { background: #E4F7EF; color: var(--success); }
-.type-learn { background: #FFF3DA; color: #B5790A; }
-
-.status-badge {
-  display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;
-  text-transform: capitalize;
-}
-.status-pending { background: #FFF3DA; color: #B5790A; }
-.status-accepted { background: #E4F7EF; color: var(--success); }
-.status-rejected { background: #FCEAEA; color: var(--error); }
-
-/* ===== Profile page ===== */
-.profile-page { padding-top: 32px; }
-
-.profile-header {
-  display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
-  background: linear-gradient(135deg, var(--ink), #8B7CF0); border-radius: 16px; padding: 24px 28px; color: #fff;
-}
-
-.profile-avatar {
-  width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.2);
-  display: flex; align-items: center; justify-content: center; font-family: var(--font-display);
-  font-weight: 700; font-size: 20px; flex-shrink: 0;
-}
-
-.profile-name { font-family: var(--font-display); font-weight: 700; font-size: 24px; margin: 0; }
-.profile-meta { margin: 4px 0 0; color: #EDEAFB; font-size: 14px; }
-
-.profile-section-title {
-  font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--ink); margin: 0 0 14px;
-}
-
-.skill-row {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  background: #fff; border-radius: 12px; padding: 14px 18px; margin-bottom: 10px;
-  box-shadow: 0 4px 14px -10px rgba(40,20,90,0.25);
-}
-
-.skill-row-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.skill-row-name { font-weight: 700; color: var(--text); }
-.skill-row-level { font-size: 13px; color: var(--slate); }
-
-.skill-remove-btn { background: var(--error); font-size: 13px; padding: 6px 14px; }
-.skill-remove-btn:hover { background: #c53a32; }
-
-.add-skill-card {
-  background: #fff; border-radius: 16px; padding: 24px 26px; margin-top: 24px;
-  box-shadow: 0 6px 20px -12px rgba(40,20,90,0.2);
-}
-
-.add-skill-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.add-skill-row input { flex: 2; min-width: 180px; }
-.add-skill-row select { flex: 1; min-width: 120px; }
-.add-skill-row button { flex: 0 0 auto; }
-
-.empty-hint { color: var(--slate); font-size: 14px; }
-
-/* ===== My matches page ===== */
-.matches-page { padding-top: 32px; }
-
-.match-request-card {
-  background: #fff; border-radius: 16px; padding: 18px 20px; margin-bottom: 12px;
-  box-shadow: 0 4px 14px -10px rgba(40,20,90,0.25);
-}
-
-.match-request-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.match-request-name { font-family: var(--font-display); font-weight: 600; font-size: 16px; color: var(--ink); }
-.match-request-swap { font-size: 14px; color: var(--slate); margin: 0 0 12px; }
-.match-request-actions { display: flex; gap: 10px; }
-
-.accept-btn { background: var(--success); }
-.accept-btn:hover { background: #178a67; }
-.reject-btn { background: transparent; color: var(--error); border: 1.5px solid var(--error); }
-.reject-btn:hover { background: #FCEAEA; }
-
-
-/* ===== Sessions page ===== */
-.session-card {
-  background: #fff; border-radius: 16px; padding: 18px 20px; margin-bottom: 12px;
-  box-shadow: 0 4px 14px -10px rgba(40,20,90,0.25);
-}
-
-.session-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-
-.session-meta { font-size: 13px; color: var(--slate); margin: 0 0 8px; }
-
-.session-link {
-  display: inline-block; font-size: 13px; color: var(--ink-dark); font-weight: 600;
-  margin-bottom: 14px; text-decoration: none;
-}
-.session-link:hover { text-decoration: underline; }
-
-.session-card textarea {
-  width: 100%; resize: vertical; font-family: var(--font-body);
-}
-
-.review-form {
-  margin-top: 14px; padding-top: 14px; border-top: 1px dashed #e5e0f5;
-  display: flex; flex-direction: column; gap: 8px;
-}
-
-.review-form select, .review-form textarea { width: 100%; }
-
-/* ===== Profile badges ===== */
-.profile-badges { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-
-.profile-rating {
-  background: rgba(255,255,255,0.2); color: #fff; font-size: 12px; font-weight: 600;
-  padding: 4px 10px; border-radius: 20px;
-}
-
-.profile-badge-pill {
-  background: #FFD86B; color: #6B4E00; font-size: 12px; font-weight: 700;
-  padding: 4px 10px; border-radius: 20px;
+/* Inline status feedback, e.g. "Match request sent!" */
+.status-message {
+  display: inline-block;
+  background: var(--teal-soft);
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
 }
