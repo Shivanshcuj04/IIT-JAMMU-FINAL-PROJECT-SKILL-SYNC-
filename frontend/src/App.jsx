@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Explore from "./pages/Explore";
 import MatchRequests from "./pages/MatchRequests";
+import Sessions from "./pages/Sessions";
 import { useAuth } from "./context/AuthContext";
 
 function PrivateRoute({ children }) {
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/explore" element={<PrivateRoute><Explore /></PrivateRoute>} />
         <Route path="/matches" element={<PrivateRoute><MatchRequests /></PrivateRoute>} />
+        <Route path="/sessions" element={<PrivateRoute><Sessions /></PrivateRoute>} />
       </Routes>
     </>
   );
