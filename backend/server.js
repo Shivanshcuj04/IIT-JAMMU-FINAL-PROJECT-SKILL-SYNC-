@@ -8,6 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const matchRoutes = require("./routes/matchRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const supportRoutes = require("./routes/support");
 
 connectDB();
 
@@ -23,6 +24,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/matches", matchRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/support", supportRoutes);
 
 // Fallback error handler
 app.use((err, req, res, next) => {
