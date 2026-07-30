@@ -1,80 +1,91 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import PasswordField from "../components/PasswordField";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { login, user } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) navigate("/explore");
-  }, [user, navigate]);
+  const emailIsValid = EMAIL_PATTERN.test(email);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setSubmitting(true);
     try {
       await login(email, password);
       navigate("/explore");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Check your details and try again.");
+      setError(err.response?.data?.message || "Login failed");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <p className="auth-eyebrow">Welcome back</p>
-        <h2 className="auth-title">Log in</h2>
+      <div className="auth-visual" aria-hidden="true">
+        <div className="swap-demo">
+          <div className="card">
+            <h3>Guitar</h3>
+            <span className="badge badge-offer">Teach</span>
+          </div>
+          <span className="swap-arrow">⇄</span>
+          <div className="card">
+            <h3>Spanish</h3>
+            <span className="badge badge-seek">Learn</span>
+          </div>
+        </div>
+        <p className="auth-visual-caption">Every login is a step back onto the board.</p>
+      </div>
 
-        <form onSubmit={handleSubmit}>
-          <label className="auth-label" htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <div className="auth-form-wrap">
+        <div className="auth-card">
+          <h2>Welcome back</h2>
+          <p className="auth-subtitle">Log in to see your matches.</p>
 
-          <label className="auth-label" htmlFor="password">Password</label>
-          <div className="auth-password-row">
+          <form onSubmit={handleSubmit} noValidate>
+            <label htmlFor="login-email">Email</label>
             <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
+              id="login-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setEmailTouched(true)}
+              className={emailTouched ? (emailIsValid ? "field-valid" : "field-invalid") : ""}
+              required
+            />
+            {emailTouched && !emailIsValid && (
+              <p className="field-hint field-hint-error">Enter a valid email address</p>
+            )}
+
+            <label htmlFor="login-password">Password</label>
+            <PasswordField
+              id="login-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <button
-              type="button"
-              className="auth-toggle-btn"
-              onClick={() => setShowPassword((s) => !s)}
-            >
-              {showPassword ? "Hide" : "Show"}
+
+            {error && <p className="status-message status-error">{error}</p>}
+
+            <button type="submit" disabled={submitting}>
+              {submitting ? <span className="btn-spinner" aria-hidden="true" /> : "Login"}
             </button>
-          </div>
+          </form>
 
-          {error && <p className="auth-error">{error}</p>}
-
-          <button type="submit" className="auth-submit" disabled={loading}>
-            {loading ? "Logging in…" : "Log in"}
-          </button>
-        </form>
-
-        <p className="auth-switch">
-          No account? <Link to="/register">Create one</Link>
-        </p>
+          <p className="auth-switch">
+            No account? <Link to="/register">Register</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
