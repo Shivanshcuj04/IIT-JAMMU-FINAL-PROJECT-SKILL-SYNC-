@@ -1072,3 +1072,59 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
 @media (max-width: 640px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ==========================================================================
+   Skill groups (Profile) — collapsible "Want to Teach" / "Want to Learn"
+   dropdowns, reusing the same caret + open/close pattern as the FAQ.
+   ========================================================================== */
+
+.skill-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.skill-group {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.skill-group-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 16px 20px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+.skill-group-header:hover { background: rgba(217, 164, 65, 0.06); }
+.skill-group-header .badge { margin-left: 8px; }
+
+.skill-group-body {
+  padding: 0 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: faq-open 0.18s ease both;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 0;
+}
