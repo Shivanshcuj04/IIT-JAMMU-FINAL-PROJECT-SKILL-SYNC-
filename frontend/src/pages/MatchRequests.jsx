@@ -4,10 +4,9 @@ import { useAuth } from "../context/AuthContext";
 
 export default function MatchRequests() {
   const [matches, setMatches] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  const load = () => api.get("/matches/me").then((res) => setMatches(res.data.matches)).finally(() => setLoading(false));
+  const load = () => api.get("/matches/me").then((res) => setMatches(res.data.matches));
 
   useEffect(() => { load(); }, []);
 
@@ -17,36 +16,21 @@ export default function MatchRequests() {
   };
 
   return (
-    <div className="container matches-page">
-      <p className="explore-eyebrow">Requests and swaps</p>
-      <h2 className="explore-title">My matches</h2>
-
-      {loading && <p className="explore-loading">Loading your matches…</p>}
-
-      {!loading && matches.length === 0 && (
-        <div className="explore-empty">
-          <h3>No matches yet</h3>
-          <p>Head over to Explore to send your first swap request.</p>
-        </div>
-      )}
-
+    <div className="container">
+      <h2>My Matches</h2>
+      {matches.length === 0 && <p>No matches yet.</p>}
       {matches.map((m) => {
         const isReceiver = m.receiver._id === user.id;
         const other = isReceiver ? m.requester : m.receiver;
         return (
-          <div className="match-request-card" key={m._id}>
-            <div className="match-request-top">
-              <span className="match-request-name">{other.name}</span>
-              <span className={`status-badge status-${m.status}`}>{m.status}</span>
-            </div>
-            <p className="match-request-swap">
-              Offered <strong>{m.offeredSkillName}</strong> ⇄ Requested <strong>{m.requestedSkillName}</strong>
-            </p>
+          <div className="card" key={m._id}>
+            <p><strong>{other.name}</strong> · status: {m.status}</p>
+            <p>Offered: {m.offeredSkillName} ↔ Requested: {m.requestedSkillName}</p>
             {isReceiver && m.status === "pending" && (
-              <div className="match-request-actions">
-                <button className="accept-btn" onClick={() => respond(m._id, "accepted")}>Accept</button>
-                <button className="reject-btn" onClick={() => respond(m._id, "rejected")}>Reject</button>
-              </div>
+              <>
+                <button onClick={() => respond(m._id, "accepted")}>Accept</button>{" "}
+                <button onClick={() => respond(m._id, "rejected")}>Reject</button>
+              </>
             )}
           </div>
         );
