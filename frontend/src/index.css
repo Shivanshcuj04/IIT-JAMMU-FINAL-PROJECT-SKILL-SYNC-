@@ -619,211 +619,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   .support-fab { bottom: 16px; right: 16px; }
   .support-panel { right: 16px; bottom: 80px; }
 }
-/* ==========================================================================
-   Support / Help Desk — appended to index.css
-   Same corkboard idea as the rest of the site: FAQs read as pinned index
-   cards (thumbtack + slight tilt, like .swap-demo), and the contact form
-   sits in a plain .card so it needs no new surface language.
-   ========================================================================== */
 
-/* ---------------------------------- FAQ list ---------------------------------- */
-
-.faq-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  max-width: 640px;
-}
-
-.faq-item {
-  position: relative;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  transform: rotate(-0.6deg);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  overflow: hidden;
-}
-.faq-item:nth-child(even) { transform: rotate(0.6deg); }
-.faq-item:hover,
-.faq-item-open {
-  transform: rotate(0deg);
-  box-shadow: var(--shadow-md);
-}
-
-/* thumbtack, reusing the same gold dot used for the brand mark */
-.faq-item::before {
-  content: "";
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 1px 2px rgba(27, 42, 61, 0.35);
-}
-
-.faq-question {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: none;
-  border: none;
-  box-shadow: none;
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.98rem;
-  text-align: left;
-  padding: 16px 20px 16px 34px;
-  cursor: pointer;
-}
-.faq-question:hover { background: rgba(217, 164, 65, 0.06); }
-
-.faq-caret {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  display: inline-grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--teal-soft);
-  color: var(--teal);
-  font-family: var(--font-mono);
-  font-weight: 700;
-}
-
-.faq-answer {
-  padding: 0 20px 18px 34px;
-  animation: faq-open 0.18s ease both;
-}
-.faq-answer p { margin: 0; color: var(--muted); font-size: 0.92rem; }
-
-@keyframes faq-open {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ------------------------------- Contact form extras ------------------------------- */
-
-.char-counter {
-  float: right;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted);
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.status-error {
-  background: rgba(200, 70, 60, 0.12);
-  color: #a53a30;
-}
-
-.inline-copy-btn {
-  display: inline;
-  padding: 2px 10px;
-  font-size: 0.85rem;
-  font-family: var(--font-mono);
-  border-radius: 999px;
-  vertical-align: baseline;
-}
-
-/* ---------------------------------- Floating help ---------------------------------- */
-
-.support-fab {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  font-weight: 700;
-  background: var(--gold);
-  color: var(--ink);
-  box-shadow: var(--shadow-md);
-  z-index: 30;
-}
-.support-fab:hover { background: var(--gold-dark); transform: translateY(-2px); }
-
-.support-panel-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(27, 42, 61, 0.15);
-  z-index: 25;
-}
-
-.support-panel {
-  position: fixed;
-  bottom: 88px;
-  right: 24px;
-  width: min(320px, calc(100vw - 48px));
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-  z-index: 30;
-  overflow: hidden;
-  animation: rise 0.22s ease both;
-}
-
-.support-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  background: var(--ink);
-  color: #fff;
-}
-.support-panel-header strong { font-family: var(--font-display); font-size: 1.05rem; }
-
-.support-panel-close {
-  background: none;
-  border: none;
-  box-shadow: none;
-  color: #fff;
-  font-size: 18px;
-  padding: 0 4px;
-  line-height: 1;
-}
-.support-panel-close:hover { background: rgba(255, 255, 255, 0.12); }
-
-.support-panel-body { padding: 14px 16px; max-height: 240px; overflow-y: auto; }
-.support-panel-faq { margin-bottom: 14px; }
-.support-panel-faq:last-child { margin-bottom: 0; }
-.support-panel-question {
-  margin: 0 0 4px;
-  font-weight: 600;
-  font-size: 0.88rem;
-  color: var(--ink);
-}
-.support-panel-answer { margin: 0; font-size: 0.85rem; color: var(--muted); }
-
-.support-panel-link {
-  display: block;
-  text-align: center;
-  padding: 12px 16px;
-  background: var(--teal-soft);
-  color: var(--teal);
-  font-weight: 600;
-  font-size: 0.88rem;
-  text-decoration: none;
-  border-top: 1px solid var(--line);
-}
-.support-panel-link:hover { background: #d8e9e7; }
-
-@media (max-width: 480px) {
-  .support-fab { bottom: 16px; right: 16px; }
-  .support-panel { right: 16px; bottom: 80px; }
-}
 /* ==========================================================================
    Auth pages (Login / Register)
    Same board metaphor: a "trade card" demo on one side, the form pinned
@@ -978,6 +774,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
 /* ==========================================================================
    Dashboard — "your corner of the board"
    ========================================================================== */
@@ -1337,3 +1134,203 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
 .avatar-dropdown-divider { height: 1px; background: var(--line); margin: 4px 0; }
 .avatar-dropdown-item.logout { color: #a53a30; font-weight: 600; }
 
+/* ==========================================================================
+   Profile page — halved banner, skill list rows, split teach/learn forms
+   These fill in classes used by Profile.jsx that the design system above
+   didn't yet define (the corkboard tokens — --ink/--gold/--teal/--card —
+   are reused throughout, same as everywhere else on the site).
+   ========================================================================== */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.profile-header-split { justify-content: space-between; }
+
+.profile-header-half {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+}
+.profile-header-left { flex: 1; }
+.profile-header-right { flex: 1; justify-content: flex-end; }
+
+.profile-header-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--line);
+  margin: 0 24px;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+
+.profile-meta {
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+.profile-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.profile-rating {
+  background: rgba(217, 164, 65, 0.16);
+  color: var(--gold-dark);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-badge-pill {
+  background: var(--teal-soft);
+  color: var(--teal);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-section-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+.empty-hint {
+  color: var(--muted);
+  font-style: italic;
+  margin: 0 0 24px;
+}
+
+.skill-row-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.skill-row-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.skill-row-level {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.cat-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(27, 42, 61, 0.06);
+  color: var(--ink-soft);
+}
+
+.type-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.type-teach { background: rgba(217, 164, 65, 0.16); color: var(--gold-dark); }
+.type-learn { background: var(--teal-soft); color: var(--teal); }
+
+.skill-remove-btn {
+  background: transparent;
+  border: 1.5px solid var(--line);
+  color: #a53a30;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.skill-remove-btn:hover { background: rgba(200, 70, 60, 0.08); border-color: #c8463c; }
+
+.add-skill-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 28px;
+}
+.add-skill-card .profile-section-title { margin: 0 0 16px; }
+
+.add-skill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.add-skill-row input { flex: 1; min-width: 180px; }
+.add-skill-row select { cursor: pointer; min-width: 130px; }
+
+.add-skill-columns {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+.add-skill-columns .add-skill-card { flex: 1; min-width: 0; }
+
+@media (max-width: 640px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+  .profile-header-split { flex-direction: column; }
+  .profile-header-half { flex-direction: column; }
+  .profile-header-right { justify-content: center; margin-top: 16px; }
+  .profile-header-divider { width: 100%; height: 1px; margin: 16px 0; }
+  .profile-badges { justify-content: center; }
+
+  .add-skill-columns { flex-direction: column; gap: 16px; }
+
+  .add-skill-row { flex-direction: column; align-items: stretch; }
+  .add-skill-row input,
+  .add-skill-row select,
+  .add-skill-row button {
+    width: 100%;
+  }
+}
