@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 
+import { Link } from "react-router-dom";
+// ...
+{match.status === "accepted" && (
+  <Link to={`/chat/${match._id}`} className="chat-btn">💬 Message</Link>
+)}
+
 export default function MatchRequests() {
   const [matches, setMatches] = useState([]);
   const { user } = useAuth();

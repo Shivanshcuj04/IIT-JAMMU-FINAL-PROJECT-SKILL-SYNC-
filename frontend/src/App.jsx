@@ -10,6 +10,7 @@ import Explore from "./pages/Explore";
 import MatchRequests from "./pages/MatchRequests";
 import Dashboard from "./pages/Dashboard";
 import Support from "./pages/Support";
+import Chat from "./pages/Chat";
 import FloatingSupportButton from "./components/FloatingSupportButton";
 import { useAuth } from "./context/AuthContext";
 
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/explore" element={<PrivateRoute><Explore /></PrivateRoute>} />
           <Route path="/matches" element={<PrivateRoute><MatchRequests /></PrivateRoute>} />
+          <Route path="/chat/:matchId" element={<PrivateRoute><Chat /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/support" element={<Support />} />
         </Routes>
