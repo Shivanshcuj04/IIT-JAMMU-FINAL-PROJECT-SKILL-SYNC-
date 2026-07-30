@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -17,19 +19,31 @@ function PrivateRoute({ children }) {
 }
 
 export default function App() {
+  const { user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="/explore" element={<PrivateRoute><Explore /></PrivateRoute>} />
-        <Route path="/matches" element={<PrivateRoute><MatchRequests /></PrivateRoute>} />
-        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        <Route path="/support" element={<Support />} />
-      </Routes>
+      <Navbar onToggleSidebar={() => setSidebarOpen((o) => !o)} />
+
+      {user && <Sidebar open={sidebarOpen} onNavigate={() => setSidebarOpen(false)} />}
+      {user && sidebarOpen && (
+        <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <main className={user ? "app-main-with-sidebar" : ""}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+          <Route path="/explore" element={<PrivateRoute><Explore /></PrivateRoute>} />
+          <Route path="/matches" element={<PrivateRoute><MatchRequests /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/support" element={<Support />} />
+        </Routes>
+      </main>
+
       <FloatingSupportButton />
     </>
   );
