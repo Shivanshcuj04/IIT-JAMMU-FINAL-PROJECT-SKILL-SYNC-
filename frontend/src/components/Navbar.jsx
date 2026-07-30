@@ -1,36 +1,39 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AvatarMenu from "./AvatarMenu";
 
-export default function Navbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+export default function Navbar({ onToggleSidebar }) {
+  const { user } = useAuth();
 
   return (
-    <div className="navbar">
-      <div>
-        <Link to="/"><strong>SkillSync</strong></Link>
-        <Link to="/support">Support</Link>
+    <div className="topbar">
+      <div className="topbar-left">
         {user && (
-          <>
-            <Link to="/explore">Explore</Link>
-            <Link to="/matches">My Matches</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/profile">Profile</Link>
-          </>
+          <button
+            type="button"
+            className="sidebar-toggle"
+            onClick={onToggleSidebar}
+            aria-label="Toggle menu"
+          >
+            ☰
+          </button>
         )}
+        <Link to="/" className="topbar-brand">
+          <span className="topbar-brand-mark">⇄</span>
+          <span className="topbar-brand-text">
+            <strong>SkillSync</strong>
+            <span className="topbar-tagline">Teach ⇄ Learn</span>
+          </span>
+        </Link>
       </div>
-      <div>
+
+      <div className="topbar-actions">
         {user ? (
-          <button onClick={handleLogout}>Logout</button>
+          <AvatarMenu />
         ) : (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
+            <Link to="/login" className="topbar-link">Login</Link>
+            <Link to="/register" className="topbar-link topbar-link-primary">Register</Link>
           </>
         )}
       </div>
