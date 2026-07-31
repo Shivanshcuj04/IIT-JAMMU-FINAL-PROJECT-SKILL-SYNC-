@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
-
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000"; // ⚠️ match whatever env var name you already use elsewhere in the app
 
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -17,9 +15,8 @@ function linkify(text) {
 export default function Chat() {
   const { matchId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth(); // ⚠️ adjust user.token / user._id below if your AuthContext names these differently
-  const token = user?.token;
-  const myId = user?._id || user?.id;
+  const { user } = useAuth();
+  const myId = user?.id;
 
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -29,9 +26,7 @@ export default function Chat() {
 
   const fetchMessages = useCallback(async () => {
     try {
-      const res = await axios.get(`${API_BASE}/api/messages/${matchId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get(`/messages/${matchId}`);
       setMessages(res.data);
       setError("");
     } catch (err) {
@@ -39,7 +34,7 @@ export default function Chat() {
     } finally {
       setLoading(false);
     }
-  }, [matchId, token]);
+  }, [matchId]);
 
   useEffect(() => {
     fetchMessages();
@@ -55,11 +50,7 @@ export default function Chat() {
     e.preventDefault();
     if (!text.trim()) return;
     try {
-      await axios.post(
-        `${API_BASE}/api/messages/${matchId}`,
-        { text },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post(`/messages/${matchId}`, { text });
       setText("");
       fetchMessages();
     } catch (err) {
@@ -101,3 +92,4 @@ export default function Chat() {
     </div>
   );
 }
+ 
