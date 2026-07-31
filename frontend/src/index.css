@@ -1,5 +1,7 @@
-/* ==========================================================================
-   SkillSync — visual identity
+/* ============================================================================
+   SkillSync Professional Design System v2
+   Enhanced color contrast, refined spacing, polished UI, and maintainable comments.
+   ============================================================================
    Concept: a trade board. People pin what they can teach and what they
    want to learn, the same way a corkboard notice works — so the palette,
    the type, and the signature "swap" mark all come from that idea.
@@ -29,7 +31,7 @@
   --card: #ffffff;
   --line: #e7e1d2;
   --gold: #d9a441;
-  --gold-dark: #b9852a;
+  --gold-dark: #a87416;
   --teal: #2c6e68;
   --teal-soft: #e4efee;
   --text: #22262b;
@@ -37,7 +39,7 @@
   --radius: 14px;
   --radius-sm: 8px;
   --shadow-sm: 0 1px 2px rgba(27, 42, 61, 0.05);
-  --shadow-md: 0 10px 30px -12px rgba(27, 42, 61, 0.18);
+  --shadow-md: 0 16px 40px -14px rgba(27, 42, 61, 0.22);
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
