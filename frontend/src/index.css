@@ -23,21 +23,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap");
 
 :root {
-  --ink: #1b2a3d;
-  --ink-soft: #2a3d54;
-  --paper: #faf7f0;
-  --card: #ffffff;
-  --line: #e7e1d2;
-  --gold: #d9a441;
-  --gold-dark: #b9852a;
-  --teal: #2c6e68;
-  --teal-soft: #e4efee;
-  --text: #22262b;
-  --muted: #6b7280;
+  --ink:#172437;
+  --paper:#F8F6F2;
+  --gold:#E2B04A;
+  --gold-dark:#C8901C;
+
+  --teal:#23766F;
+  --teal-soft:#EAF6F5;
+
+  --line:#E6DFD1;
+
+  --text:#1F2937;
+  --muted:#64748B;
   --radius: 14px;
   --radius-sm: 8px;
   --shadow-sm: 0 1px 2px rgba(27, 42, 61, 0.05);
-  --shadow-md: 0 10px 30px -12px rgba(27, 42, 61, 0.18);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,.05);
+  --shadow-md:
+   0 10px 30px rgba(0,0,0,.08),
+   0 2px 6px rgba(0,0,0,.04);
+
+   --shadow-lg:
+   0 18px 40px rgba(0,0,0,.12),
+   0 4px 12px rgba(0,0,0,.06);
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -53,7 +61,6 @@ body {
   margin: 0;
   font-family: var(--font-body);
   background-color: var(--paper);
-  background-image:
     radial-gradient(circle, rgba(27, 42, 61, 0.06) 1px, transparent 1px);
   background-size: 22px 22px;
   color: var(--text);
@@ -201,7 +208,15 @@ a { color: var(--teal); }
 /* ----------------------------------- Cards ----------------------------------- */
 
 .card {
-  background: var(--card);
+
+background:
+
+linear-gradient(
+180deg,
+#ffffff,
+#fdfdfd
+);
+     background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 20px;
