@@ -1,38 +1,74 @@
-require("dotenv").config();
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
-const connectDB = require("./config/db");
+require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const matchRoutes = require("./routes/matchRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-const supportRoutes = require("./routes/support");
-const messageRoutes = require("./routes/messageRoutes");
-
-connectDB();
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL || "*" }));
+// Comma-separate multiple allowed origins in CLIENT_URL on Render, e.g.:
+// https://your-app-lovat.vercel.app,https://your-app-git-main-yourname.vercel.app
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((url) => url.trim());
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Not allowed by CORS: ${origin}`));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-app.get("/", (req, res) => res.json({ status: "SkillSync API running" }));
+app.get("/", (req, res) => {
+  res.json({ message: "SkillSync API is running" });
+});
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ success: true, message: "SkillSync backend is healthy" });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/matches", matchRoutes);
+app.use("/api/messages", messageRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/reviews", reviewRoutes);
-app.use("/api/support", supportRoutes);
-app.use("/api/messages", messageRoutes);
 
-// Fallback error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Server error", error: err.message });
+app.use((req, res) => {
+  res.status(404).json({ message: "API route not found" });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`SkillSync API listening on port ${PORT}`));
+
+const startServer = async () => {
+  try {
+    if (!process.env.MONGO_URI) throw new Error("MONGO_URI is missing");
+    if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is missing");
+
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected");
+
+    app.listen(PORT, () => {
+      console.log(`SkillSync server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server startup error:", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
