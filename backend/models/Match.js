@@ -7,8 +7,8 @@ const matchSchema = new mongoose.Schema(
     requester: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     receiver: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 
-    offeredSkillName: { type: String, required: true }, // what requester will teach
-    requestedSkillName: { type: String, required: true }, // what requester wants to learn
+    offeredSkillName: { type: String, required: true },
+    requestedSkillName: { type: String, required: true },
 
     status: {
       type: String,
