@@ -13,6 +13,7 @@ import Support from "./pages/Support";
 import Chat from "./pages/Chat";
 import FloatingSupportButton from "./components/FloatingSupportButton";
 import { useAuth } from "./context/AuthContext";
+import Sessions from "./pages/Sessions";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/chat/:matchId" element={<PrivateRoute><Chat /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/support" element={<Support />} />
+          <Route path="/sessions" element={<PrivateRoute><Sessions /></PrivateRoute>} />
         </Routes>
       </main>
 
