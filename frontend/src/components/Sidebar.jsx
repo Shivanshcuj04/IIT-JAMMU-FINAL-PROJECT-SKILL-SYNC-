@@ -1,10 +1,9 @@
 import { NavLink } from "react-router-dom";
 
-// Order matches exactly what was requested: Explore, My Matches,
-// Dashboard, Support.
 const LINKS = [
   { to: "/explore", label: "Explore" },
   { to: "/matches", label: "My Matches" },
+  { to: "/sessions", label: "Sessions" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/support", label: "Support" },
 ];
