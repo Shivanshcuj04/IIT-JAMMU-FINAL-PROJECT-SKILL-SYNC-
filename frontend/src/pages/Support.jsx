@@ -3,7 +3,7 @@ import FAQAccordion from "../components/FAQAccordion";
 import SupportContactForm from "../components/SupportContactForm";
 import faqs from "../data/faqs";
 
-const SUPPORT_EMAIL = "support@skillsync.app"; // adjust to your real address
+const SUPPORT_EMAIL = "supportskillsync@gmail.com"; // adjust to your real address
 
 export default function Support() {
   const [copied, setCopied] = useState(false);
