@@ -229,4 +229,4 @@ npm run dev
 ```
 
 ### 4. Open the app
-Visit `http://localhost:5173` in your browser.
+Visit `https://iit-jammu-final-project-skill-sync-lovat.vercel.app/` in your browser.
