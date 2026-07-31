@@ -1,4 +1,4 @@
-export default function SkillCard({ match, onRequestSwap }) {
+export default function SkillCard({ match, onRequestSwap, alreadyRequested }) {
   return (
     <div className="card">
       <h3>{match.user.name} {match.user.city ? `· ${match.user.city}` : ""}</h3>
@@ -8,13 +8,19 @@ export default function SkillCard({ match, onRequestSwap }) {
       ))}
       <p><strong>They can teach you:</strong> {match.theyCanTeachMe.join(", ")}</p>
       <p><strong>You can teach them:</strong> {match.iCanTeachThem.join(", ")}</p>
-      <button
-        onClick={() =>
-          onRequestSwap(match.user.id, match.iCanTeachThem[0], match.theyCanTeachMe[0])
-        }
-      >
-        Request Swap
-      </button>
+      {alreadyRequested ? (
+        <button className="btn-outline" disabled>
+          Request Sent
+        </button>
+      ) : (
+        <button
+          onClick={() =>
+            onRequestSwap(match.user.id, match.iCanTeachThem[0], match.theyCanTeachMe[0])
+          }
+        >
+          Request Swap
+        </button>
+      )}
     </div>
   );
 }
