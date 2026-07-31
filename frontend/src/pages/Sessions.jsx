@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { scheduleSession, getMySessions, completeSession } from "../api/sessions";
+import { leaveReview } from "../api/reviews";
 
 const emptyForm = { matchId: "", scheduledAt: "", durationMinutes: 60, meetingLink: "" };
 
@@ -12,6 +13,8 @@ export default function Sessions() {
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [reviewForms, setReviewForms] = useState({});
+  const [reviewedSessionIds, setReviewedSessionIds] = useState(new Set());
 
   const loadAll = async () => {
     setLoading(true);
@@ -32,17 +35,18 @@ export default function Sessions() {
 
   useEffect(() => { loadAll(); }, []);
 
-  const acceptedMatches = allMatches.filter((m) => m.status === "accepted");
   const matchLookup = Object.fromEntries(allMatches.map((m) => [m._id, m]));
+  const acceptedMatches = allMatches.filter((m) => m.status === "accepted");
 
-  const partnerName = (matchRefOrId) => {
+  const otherParticipant = (matchRefOrId) => {
     const id = typeof matchRefOrId === "string" ? matchRefOrId : matchRefOrId?._id;
     const full = matchLookup[id];
-    if (!full) return "Unknown";
+    if (!full) return null;
     const isReceiver = full.receiver?._id === user.id;
-    const other = isReceiver ? full.requester : full.receiver;
-    return other?.name || "Unknown";
+    return isReceiver ? full.requester : full.receiver;
   };
+
+  const partnerName = (matchRefOrId) => otherParticipant(matchRefOrId)?.name || "Unknown";
 
   const handleSchedule = async (e) => {
     e.preventDefault();
@@ -66,6 +70,38 @@ export default function Sessions() {
       loadAll();
     } catch (err) {
       setError(err.response?.data?.message || "Could not update session");
+    }
+  };
+
+  const handleRatingChange = (sessionId, rating) => {
+    setReviewForms((prev) => ({ ...prev, [sessionId]: { ...(prev[sessionId] || {}), rating } }));
+  };
+  const handleCommentChange = (sessionId, comment) => {
+    setReviewForms((prev) => ({ ...prev, [sessionId]: { ...(prev[sessionId] || {}), comment } }));
+  };
+
+  const handleSubmitReview = async (session) => {
+    const formState = reviewForms[session._id];
+    if (!formState?.rating) {
+      setError("Pick a star rating first.");
+      return;
+    }
+    const reviewee = otherParticipant(session.match);
+    if (!reviewee?._id) {
+      setError("Could not determine who to rate.");
+      return;
+    }
+    try {
+      await leaveReview({
+        sessionId: session._id,
+        revieweeId: reviewee._id,
+        rating: formState.rating,
+        comment: formState.comment || "",
+      });
+      setReviewedSessionIds((prev) => new Set(prev).add(session._id));
+      setError("");
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not submit review");
     }
   };
 
@@ -151,6 +187,40 @@ export default function Sessions() {
           )}
           {s.status === "scheduled" && (
             <button className="btn-outline" onClick={() => handleComplete(s._id)}>Mark completed</button>
+          )}
+
+          {s.status === "completed" && !reviewedSessionIds.has(s._id) && (
+            <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid var(--line)" }}>
+              <p className="skill-row-level" style={{ marginBottom: "6px" }}>
+                Rate {partnerName(s.match)}
+              </p>
+              <div style={{ display: "flex", gap: "4px", marginBottom: "8px" }}>
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    className="btn-outline"
+                    style={{
+                      padding: "4px 10px",
+                      background: (reviewForms[s._id]?.rating || 0) >= n ? "var(--gold)" : "transparent",
+                    }}
+                    onClick={() => handleRatingChange(s._id, n)}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+              <textarea
+                placeholder="Optional comment..."
+                value={reviewForms[s._id]?.comment || ""}
+                onChange={(e) => handleCommentChange(s._id, e.target.value)}
+                style={{ marginBottom: "8px", minHeight: "60px" }}
+              />
+              <button type="button" onClick={() => handleSubmitReview(s)}>Submit rating</button>
+            </div>
+          )}
+          {s.status === "completed" && reviewedSessionIds.has(s._id) && (
+            <p className="status-message" style={{ marginTop: "12px" }}>Thanks for rating!</p>
           )}
         </div>
       ))}
