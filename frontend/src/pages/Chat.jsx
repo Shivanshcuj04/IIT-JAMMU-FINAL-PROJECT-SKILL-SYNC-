@@ -3,6 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
+const ALLOWED_TYPES = [
+  "image/jpeg", "image/png", "image/gif", "image/webp",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 function linkify(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.split(urlRegex).map((part, i) =>
@@ -22,7 +30,9 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
   const bottomRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const fetchMessages = useCallback(async () => {
     try {
@@ -58,6 +68,43 @@ export default function Chat() {
     }
   };
 
+  const handleFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setError("Only images, PDFs, and Word docs are supported.");
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      setError("File is too large — 4MB max.");
+      return;
+    }
+
+    setUploading(true);
+    setError("");
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      await api.post(`/messages/${matchId}`, {
+        fileUrl: dataUrl,
+        fileName: file.name,
+        fileType: file.type,
+      });
+      fetchMessages();
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not send file");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="container chat-page">
       <button className="chat-back" onClick={() => navigate("/matches")}>← Back to Matches</button>
@@ -71,7 +118,15 @@ export default function Chat() {
         ) : (
           messages.map((m) => (
             <div key={m._id} className={`chat-bubble ${m.sender === myId ? "mine" : "theirs"}`}>
-              <p>{linkify(m.text)}</p>
+              {m.text && <p>{linkify(m.text)}</p>}
+              {m.fileUrl && m.fileType?.startsWith("image/") && (
+                <img src={m.fileUrl} alt={m.fileName || "attachment"} className="chat-image" />
+              )}
+              {m.fileUrl && !m.fileType?.startsWith("image/") && (
+                <a href={m.fileUrl} download={m.fileName} className="chat-file-link">
+                  📎 {m.fileName || "Download file"}
+                </a>
+              )}
               <span className="chat-time">
                 {new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </span>
@@ -81,6 +136,22 @@ export default function Chat() {
         <div ref={bottomRef} />
       </div>
       <form className="chat-input-row" onSubmit={sendMessage}>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          style={{ display: "none" }}
+          accept="image/*,.pdf,.doc,.docx"
+        />
+        <button
+          type="button"
+          className="btn-outline chat-attach-btn"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          title="Attach a file"
+        >
+          {uploading ? "..." : "📎"}
+        </button>
         <input
           type="text"
           value={text}
@@ -92,4 +163,3 @@ export default function Chat() {
     </div>
   );
 }
-  
