@@ -14,6 +14,7 @@ const skillSchema = new mongoose.Schema(
     },
     type: { type: String, enum: ["teach", "learn"], required: true },
     proofUrl: { type: String, default: null }, // optional certificate/portfolio link
+    verified: { type: Boolean, default: false }, // set by an admin, see adminController.verifySkill
   },
   { _id: true }
 );
