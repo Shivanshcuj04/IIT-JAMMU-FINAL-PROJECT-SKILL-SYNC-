@@ -20,6 +20,16 @@
      Display: "Fraunces"      — headings, brand mark
      Body:    "Inter"         — everything else
      Mono:    "IBM Plex Mono" — tags, labels, small caps data
+
+   Dark mode
+     Chrome surfaces (navbar/topbar/sidebar) are already the deep navy
+     --ink color, so they need no change in dark mode. Everything else
+     (--paper/--card/--line/--text/--muted/--teal/--teal-soft) gets a
+     dark-mode override below, plus a dedicated --heading variable for
+     the handful of places that print --ink as *text* (headings, names,
+     stat numbers) rather than as a background — those need to flip to
+     a light color on dark surfaces while --ink itself stays put.
+     Toggle by setting data-theme="dark" on <html> (see ThemeContext).
    ========================================================================== */
 
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap");
@@ -27,6 +37,7 @@
 :root {
   --ink: #1b2a3d;
   --ink-soft: #2a3d54;
+  --heading: var(--ink);
   --paper: #faf7f0;
   --card: #ffffff;
   --line: #e7e1d2;
@@ -45,6 +56,57 @@
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
 
+/* ------------------------------- Dark mode palette ------------------------------- */
+
+[data-theme="dark"] {
+  --heading: #f3efe4;
+  --ink-soft: #c9d3de;
+  --paper: #10161f;
+  --card: #1b232f;
+  --line: #303c4a;
+  --gold-dark: #e6b95c;
+  --teal: #5fb3ab;
+  --teal-soft: rgba(95, 179, 171, 0.16);
+  --text: #e5e2d9;
+  --muted: #97a1ad;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 16px 40px -14px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] body {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+[data-theme="dark"] .cat-badge {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="dark"] .empty-state {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="dark"] .status-error,
+[data-theme="dark"] .chat-error {
+  background: rgba(200, 70, 60, 0.18);
+  color: #ff8b7e;
+}
+
+[data-theme="dark"] .field-hint-error {
+  color: #ff8b7e;
+}
+
+[data-theme="dark"] .avatar-dropdown-item.logout {
+  color: #ff8b7e;
+}
+
+[data-theme="dark"] .skill-remove-btn {
+  color: #ff8b7e;
+}
+
+[data-theme="dark"] .support-panel-link:hover {
+  background: rgba(95, 179, 171, 0.25);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
@@ -61,11 +123,12 @@ body {
   color: var(--text);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3 {
   font-family: var(--font-display);
-  color: var(--ink);
+  color: var(--heading);
   line-height: 1.15;
   letter-spacing: -0.01em;
   margin: 0 0 12px;
@@ -209,7 +272,7 @@ a { color: var(--teal); }
   padding: 20px;
   margin-bottom: 14px;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.2s ease;
 }
 .card:hover {
   transform: translateY(-3px);
@@ -265,7 +328,7 @@ input, select, textarea, button {
 input, select, textarea {
   background: var(--card);
   color: var(--text);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
 }
 input:hover, select:hover, textarea:hover { border-color: #cfc6a8; }
 input:focus, select:focus, textarea:focus {
@@ -301,6 +364,31 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   box-shadow: none;
 }
 .btn-outline:hover { background: var(--card); border-color: var(--ink); }
+
+[data-theme="dark"] .btn-outline {
+  color: var(--heading);
+}
+[data-theme="dark"] .btn-outline:hover {
+  border-color: var(--heading);
+}
+
+/* ------------------------------- Theme toggle ------------------------------- */
+
+.theme-toggle {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 8px 12px;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: none;
+  border-radius: 999px;
+}
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+  transform: none;
+}
 
 /* ----------------------------------- Badges ----------------------------------- */
 
@@ -470,7 +558,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   background: none;
   border: none;
   box-shadow: none;
-  color: var(--ink);
+  color: var(--heading);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.98rem;
@@ -600,7 +688,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   margin: 0 0 4px;
   font-weight: 600;
   font-size: 0.88rem;
-  color: var(--ink);
+  color: var(--heading);
 }
 .support-panel-answer { margin: 0; font-size: 0.85rem; color: var(--muted); }
 
@@ -800,7 +888,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 700;
-  color: var(--ink);
+  color: var(--heading);
 }
 .stat-label {
   display: block;
@@ -902,7 +990,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   border: none;
   box-shadow: none;
   padding: 16px 20px;
-  color: var(--ink);
+  color: var(--heading);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 1rem;
@@ -1189,7 +1277,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   font-family: var(--font-display);
   font-size: 2rem;
   margin: 0 0 4px;
-  color: var(--ink);
+  color: var(--heading);
 }
 
 .profile-meta {
@@ -1226,7 +1314,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
 .profile-section-title {
   font-family: var(--font-display);
   font-size: 1.3rem;
-  color: var(--ink);
+  color: var(--heading);
   margin: 0 0 16px;
 }
 
@@ -1246,7 +1334,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
 .skill-row-name {
   font-weight: 600;
   font-size: 1rem;
-  color: var(--ink);
+  color: var(--heading);
 }
 
 .skill-row-level {
@@ -1379,12 +1467,12 @@ button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow
   align-self: flex-end;
   background: rgba(217, 164, 65, 0.18);
   border: 1px solid rgba(217, 164, 65, 0.4);
-  color: var(--ink);
+  color: var(--heading);
 }
 .chat-bubble.theirs {
   align-self: flex-start;
   background: var(--teal-soft);
-  color: var(--ink);
+  color: var(--heading);
 }
 
 .chat-link { color: var(--teal); font-weight: 600; word-break: break-all; }
