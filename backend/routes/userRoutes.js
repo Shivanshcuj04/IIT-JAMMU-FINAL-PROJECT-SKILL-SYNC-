@@ -6,6 +6,7 @@ const {
   removeSkill,
   setAvailability,
   exploreMatches,
+  reportUser,
 } = require("../controllers/userController");
 const { protect } = require("../middleware/auth");
 
@@ -16,6 +17,7 @@ router.put("/me", protect, updateProfile);
 router.post("/me/skills", protect, addSkill);
 router.delete("/me/skills/:skillId", protect, removeSkill);
 router.put("/me/availability", protect, setAvailability);
+router.post("/:id/report", protect, reportUser);
 router.get("/:id", getUserProfile);
 
 module.exports = router;
