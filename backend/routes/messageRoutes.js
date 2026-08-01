@@ -18,7 +18,6 @@ function getLoggedInUserId(req) {
   return req.user._id.toString();
 }
 
-// GET /api/messages/:matchId
 router.get("/:matchId", protect, async (req, res) => {
   try {
     const { matchId } = req.params;
@@ -44,16 +43,16 @@ router.get("/:matchId", protect, async (req, res) => {
   }
 });
 
-// POST /api/messages/:matchId
 router.post("/:matchId", protect, async (req, res) => {
   try {
     const { matchId } = req.params;
-    const { text } = req.body;
+    const { text, fileUrl, fileName, fileType } = req.body;
     const userId = getLoggedInUserId(req);
     if (!userId) return res.status(401).json({ message: "User not authenticated" });
 
-    if (!text || typeof text !== "string" || !text.trim()) {
-      return res.status(400).json({ message: "Message cannot be empty" });
+    const trimmedText = typeof text === "string" ? text.trim() : "";
+    if (!trimmedText && !fileUrl) {
+      return res.status(400).json({ message: "Message must include text or a file" });
     }
 
     const match = await Match.findById(matchId);
@@ -76,7 +75,10 @@ router.post("/:matchId", protect, async (req, res) => {
       matchId,
       sender: userId,
       receiver: receiverId,
-      text: text.trim()
+      text: trimmedText,
+      fileUrl: fileUrl || null,
+      fileName: fileName || null,
+      fileType: fileType || null,
     });
 
     return res.status(201).json(message);
