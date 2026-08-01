@@ -15,6 +15,9 @@ export default function Sessions() {
   const [loading, setLoading] = useState(true);
   const [reviewForms, setReviewForms] = useState({});
   const [reviewedSessionIds, setReviewedSessionIds] = useState(new Set());
+  const [reportOpenIds, setReportOpenIds] = useState(new Set());
+  const [reportForms, setReportForms] = useState({});
+  const [reportedIds, setReportedIds] = useState(new Set());
 
   const loadAll = async () => {
     setLoading(true);
@@ -105,6 +108,41 @@ export default function Sessions() {
     }
   };
 
+  const toggleReportForm = (sessionId) => {
+    setReportOpenIds((prev) => {
+      const next = new Set(prev);
+      next.has(sessionId) ? next.delete(sessionId) : next.add(sessionId);
+      return next;
+    });
+  };
+  const handleReportTextChange = (sessionId, val) => {
+    setReportForms((prev) => ({ ...prev, [sessionId]: val }));
+  };
+  const handleSubmitReport = async (session) => {
+    const reason = reportForms[session._id];
+    if (!reason || !reason.trim()) {
+      setError("Please describe the issue before submitting a report.");
+      return;
+    }
+    const target = otherParticipant(session.match);
+    if (!target?._id) {
+      setError("Could not determine who to report.");
+      return;
+    }
+    try {
+      await api.post(`/users/${target._id}/report`, { reason, sessionId: session._id });
+      setReportedIds((prev) => new Set(prev).add(session._id));
+      setReportOpenIds((prev) => {
+        const next = new Set(prev);
+        next.delete(session._id);
+        return next;
+      });
+      setError("");
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not submit report");
+    }
+  };
+
   if (loading) return <div className="container">Loading sessions...</div>;
 
   return (
@@ -190,11 +228,9 @@ export default function Sessions() {
           )}
 
           {s.status === "completed" && !reviewedSessionIds.has(s._id) && (
-            <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid var(--line)" }}>
-              <p className="skill-row-level" style={{ marginBottom: "6px" }}>
-                Rate {partnerName(s.match)}
-              </p>
-              <div style={{ display: "flex", gap: "4px", marginBottom: "8px" }}>
+            <div className="session-rate-block">
+              <p className="skill-row-level">Rate {partnerName(s.match)}</p>
+              <div className="session-stars">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
                     key={n}
@@ -211,12 +247,34 @@ export default function Sessions() {
                 ))}
               </div>
               <textarea
+                className="session-comment"
                 placeholder="Optional comment..."
                 value={reviewForms[s._id]?.comment || ""}
                 onChange={(e) => handleCommentChange(s._id, e.target.value)}
-                style={{ marginBottom: "8px", minHeight: "60px" }}
               />
-              <button type="button" onClick={() => handleSubmitReview(s)}>Submit rating</button>
+              <div className="session-rate-actions">
+                <button type="button" onClick={() => handleSubmitReview(s)}>Submit rating</button>
+                <button type="button" className="btn-outline" onClick={() => toggleReportForm(s._id)}>
+                  🚩 Report
+                </button>
+              </div>
+
+              {reportOpenIds.has(s._id) && (
+                <div className="session-report-block">
+                  <textarea
+                    className="session-comment"
+                    placeholder="Describe the issue..."
+                    value={reportForms[s._id] || ""}
+                    onChange={(e) => handleReportTextChange(s._id, e.target.value)}
+                  />
+                  <button type="button" className="btn-outline" onClick={() => handleSubmitReport(s)}>
+                    Submit report
+                  </button>
+                </div>
+              )}
+              {reportedIds.has(s._id) && (
+                <p className="status-message" style={{ marginTop: "4px" }}>Report submitted.</p>
+              )}
             </div>
           )}
           {s.status === "completed" && reviewedSessionIds.has(s._id) && (
