@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const LINKS = [
   { to: "/explore", label: "Explore" },
@@ -9,9 +10,16 @@ const LINKS = [
 ];
 
 export default function Sidebar({ open, onNavigate }) {
+  const { user } = useAuth();
+
+  const links =
+    user?.role === "admin"
+      ? [...LINKS, { to: "/admin", label: "Admin Panel" }]
+      : LINKS;
+
   return (
     <nav className={`sidebar ${open ? "sidebar-open" : ""}`} aria-label="Main navigation">
-      {LINKS.map((link) => (
+      {links.map((link) => (
         <NavLink
           key={link.to}
           to={link.to}
