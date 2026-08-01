@@ -5,7 +5,9 @@ import { useAuth } from "../context/AuthContext";
 // Mirrors the thresholds in the backend's User.refreshBadges() so the
 // progress bars shown here always match when a badge actually unlocks.
 const SESSIONS_FOR_VERIFIED_TEACHER = 5;
+const SESSIONS_FOR_MASTER_TEACHER = 20;
 const REVIEWS_FOR_PEER_RATED = 3;
+const REVIEWS_FOR_TOP_RATED = 10;
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -31,11 +33,23 @@ export default function Dashboard() {
   );
   const hasVerifiedTeacher = profile.badges?.includes("Verified Teacher");
 
+  const masterProgress = Math.min(
+    100,
+    Math.round((profile.completedSessionsCount / SESSIONS_FOR_MASTER_TEACHER) * 100)
+  );
+  const hasMasterTeacher = profile.badges?.includes("Master Teacher");
+
   const reviewsProgress = Math.min(
     100,
     Math.round((profile.reviewCount / REVIEWS_FOR_PEER_RATED) * 100)
   );
   const hasPeerRated = profile.badges?.includes("Peer Rated");
+
+  const topRatedProgress = Math.min(
+    100,
+    Math.round((profile.reviewCount / REVIEWS_FOR_TOP_RATED) * 100)
+  );
+  const hasTopRated = profile.badges?.includes("Top Rated");
 
   return (
     <div className="container">
@@ -83,6 +97,20 @@ export default function Dashboard() {
 
         <div className="badge-progress-card">
           <div className="badge-progress-header">
+            <span className="badge badge-offer">Master Teacher</span>
+            {hasMasterTeacher && <span className="badge-earned">Earned ✓</span>}
+          </div>
+          <p className="badge-progress-desc">Complete 20 taught sessions.</p>
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${masterProgress}%` }} />
+          </div>
+          <p className="progress-count">
+            {profile.completedSessionsCount} / {SESSIONS_FOR_MASTER_TEACHER} sessions
+          </p>
+        </div>
+
+        <div className="badge-progress-card">
+          <div className="badge-progress-header">
             <span className="badge badge-seek">Peer Rated</span>
             {hasPeerRated && <span className="badge-earned">Earned ✓</span>}
           </div>
@@ -92,6 +120,20 @@ export default function Dashboard() {
           </div>
           <p className="progress-count">
             {profile.reviewCount} / {REVIEWS_FOR_PEER_RATED} reviews
+          </p>
+        </div>
+
+        <div className="badge-progress-card">
+          <div className="badge-progress-header">
+            <span className="badge badge-seek">Top Rated</span>
+            {hasTopRated && <span className="badge-earned">Earned ✓</span>}
+          </div>
+          <p className="badge-progress-desc">Get 10+ reviews.</p>
+          <div className="progress-track">
+            <div className="progress-fill progress-fill-teal" style={{ width: `${topRatedProgress}%` }} />
+          </div>
+          <p className="progress-count">
+            {profile.reviewCount} / {REVIEWS_FOR_TOP_RATED} reviews
           </p>
         </div>
       </div>
@@ -122,4 +164,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
