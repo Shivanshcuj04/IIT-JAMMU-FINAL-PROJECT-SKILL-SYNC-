@@ -10,6 +10,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const supportRoutes = require("./routes/support");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -47,10 +48,14 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/support", supportRoutes);
+app.use("/api/admin", adminRoutes);
 
+// 404 for unmatched API routes
 app.use((req, res) => {
   res.status(404).json({ message: "API route not found" });
-  // Catches oversized/malformed request bodies from express.json()
+});
+
+// Catches oversized/malformed request bodies from express.json()
 app.use((err, req, res, next) => {
   if (err.type === "entity.too.large" || err.status === 413) {
     return res.status(413).json({ message: "File is too large (max 4MB)" });
@@ -59,7 +64,6 @@ app.use((err, req, res, next) => {
     return res.status(400).json({ message: "Invalid request format" });
   }
   next(err);
-});
 });
 
 const PORT = process.env.PORT || 5000;
