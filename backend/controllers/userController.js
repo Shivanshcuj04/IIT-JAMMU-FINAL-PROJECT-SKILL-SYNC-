@@ -1,14 +1,13 @@
 const User = require("../models/User");
+const Report = require("../models/Report");
 const { findMatches } = require("../utils/matchingLogic");
 
-// GET /api/users/:id
 const getUserProfile = async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) return res.status(404).json({ message: "User not found" });
   res.json({ user });
 };
 
-// PUT /api/users/me  (update bio, city, timezone, avatar)
 const updateProfile = async (req, res) => {
   const { name, bio, city, timezone, avatarUrl } = req.body;
   const user = req.user;
@@ -23,7 +22,6 @@ const updateProfile = async (req, res) => {
   res.json({ user });
 };
 
-// POST /api/users/me/skills  { name, category, level, type, proofUrl }
 const addSkill = async (req, res) => {
   const { name, category, level, type, proofUrl } = req.body;
   if (!name || !type) return res.status(400).json({ message: "name and type are required" });
@@ -33,14 +31,12 @@ const addSkill = async (req, res) => {
   res.status(201).json({ skills: req.user.skills });
 };
 
-// DELETE /api/users/me/skills/:skillId
 const removeSkill = async (req, res) => {
   req.user.skills = req.user.skills.filter((s) => String(s._id) !== req.params.skillId);
   await req.user.save();
   res.json({ skills: req.user.skills });
 };
 
-// PUT /api/users/me/availability  { slots: [{day, startTime, endTime}, ...] }
 const setAvailability = async (req, res) => {
   const { slots } = req.body;
   if (!Array.isArray(slots)) return res.status(400).json({ message: "slots must be an array" });
@@ -49,11 +45,42 @@ const setAvailability = async (req, res) => {
   res.json({ availability: req.user.availability });
 };
 
-// GET /api/users/matches  -> mutual-need swap suggestions for the logged-in user
 const exploreMatches = async (req, res) => {
   const others = await User.find({ _id: { $ne: req.user._id }, isBlocked: false });
   const matches = findMatches(req.user, others);
   res.json({ matches });
+};
+
+// POST /api/users/:id/report   { reason, sessionId }
+const reportUser = async (req, res) => {
+  try {
+    const { reason, sessionId } = req.body;
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ message: "Please describe the issue" });
+    }
+    if (String(req.params.id) === String(req.user._id)) {
+      return res.status(400).json({ message: "You can't report yourself" });
+    }
+
+    const target = await User.findById(req.params.id);
+    if (!target) return res.status(404).json({ message: "User not found" });
+
+    await Report.create({
+      reporter: req.user._id,
+      reportedUser: target._id,
+      session: sessionId || null,
+      reason: reason.trim(),
+    });
+
+    target.reportCount = (target.reportCount || 0) + 1;
+    if (target.reportCount >= 5) target.isBlocked = true;
+    await target.save();
+
+    return res.status(201).json({ message: "Report submitted. Thank you for helping keep SkillSync safe." });
+  } catch (err) {
+    console.error("Error reporting user:", err);
+    return res.status(500).json({ message: "Server error submitting report" });
+  }
 };
 
 module.exports = {
@@ -63,4 +90,5 @@ module.exports = {
   removeSkill,
   setAvailability,
   exploreMatches,
+  reportUser,
 };
