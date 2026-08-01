@@ -14,10 +14,17 @@ import Chat from "./pages/Chat";
 import FloatingSupportButton from "./components/FloatingSupportButton";
 import { useAuth } from "./context/AuthContext";
 import Sessions from "./pages/Sessions";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
   return user ? children : <Navigate to="/login" />;
+}
+
+function AdminRoute({ children }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" />;
+  return user.role === "admin" ? children : <Navigate to="/dashboard" />;
 }
 
 export default function App() {
@@ -45,6 +52,7 @@ export default function App() {
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/support" element={<Support />} />
           <Route path="/sessions" element={<PrivateRoute><Sessions /></PrivateRoute>} />
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         </Routes>
       </main>
 
