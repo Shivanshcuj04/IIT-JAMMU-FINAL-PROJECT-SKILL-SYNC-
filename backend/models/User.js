@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
     averageRating: { type: Number, default: 0 },
     reviewCount: { type: Number, default: 0 },
 
-    badges: [{ type: String, enum: ["Verified Teacher", "Peer Rated"] }],
+    badges: [{ type: String, enum: ["Verified Teacher", "Peer Rated", "Master Teacher", "Top Rated"] }],
 
     role: { type: String, enum: ["user", "admin"], default: "user" },
     isBlocked: { type: Boolean, default: false },
@@ -77,7 +77,9 @@ userSchema.methods.comparePassword = async function (candidate) {
 userSchema.methods.refreshBadges = function () {
   const badges = new Set(this.badges);
   if (this.completedSessionsCount >= 5) badges.add("Verified Teacher");
+  if (this.completedSessionsCount >= 20) badges.add("Master Teacher");
   if (this.reviewCount >= 3 && this.averageRating >= 4) badges.add("Peer Rated");
+  if (this.reviewCount >= 10) badges.add("Top Rated");
   this.badges = Array.from(badges);
 };
 
