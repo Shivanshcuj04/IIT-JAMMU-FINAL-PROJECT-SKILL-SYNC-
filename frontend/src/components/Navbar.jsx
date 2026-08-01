@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import AvatarMenu from "./AvatarMenu";
 
 export default function Navbar({ onToggleSidebar }) {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="topbar">
@@ -28,6 +30,16 @@ export default function Navbar({ onToggleSidebar }) {
       </div>
 
       <div className="topbar-actions">
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
+
         {user ? (
           <AvatarMenu />
         ) : (
