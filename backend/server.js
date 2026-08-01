@@ -30,7 +30,7 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: "8mb" }));
 
 app.get("/", (req, res) => {
   res.json({ message: "SkillSync API is running" });
@@ -50,6 +50,16 @@ app.use("/api/support", supportRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "API route not found" });
+  // Catches oversized/malformed request bodies from express.json()
+app.use((err, req, res, next) => {
+  if (err.type === "entity.too.large" || err.status === 413) {
+    return res.status(413).json({ message: "File is too large (max 4MB)" });
+  }
+  if (err.type === "entity.parse.failed") {
+    return res.status(400).json({ message: "Invalid request format" });
+  }
+  next(err);
+});
 });
 
 const PORT = process.env.PORT || 5000;
