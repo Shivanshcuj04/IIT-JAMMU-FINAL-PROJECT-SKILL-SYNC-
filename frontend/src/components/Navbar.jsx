@@ -20,7 +20,7 @@ export default function Navbar({ onToggleSidebar }) {
             ☰
           </button>
         )}
-        <Link to="/" className="topbar-brand">
+        <Link to={user ? "/profile" : "/"} className="topbar-brand">
           <span className="topbar-brand-mark">⇄</span>
           <span className="topbar-brand-text">
             <strong>SkillSync</strong>
@@ -28,7 +28,6 @@ export default function Navbar({ onToggleSidebar }) {
           </span>
         </Link>
       </div>
-
       <div className="topbar-actions">
         <button
           type="button"
@@ -39,7 +38,6 @@ export default function Navbar({ onToggleSidebar }) {
         >
           {theme === "dark" ? "☀️" : "🌙"}
         </button>
-
         {user ? (
           <AvatarMenu />
         ) : (
