@@ -37,6 +37,15 @@ export default function Navbar({ onToggleSidebar }) {
           </span>
         </Link>
       </div>
+
+      {!user && (
+        <nav className="topbar-center-links" aria-label="Landing page sections">
+          <a href="#features" className="topbar-link">Features</a>
+          <a href="#how-it-works" className="topbar-link">How it works</a>
+          <Link to="/support" className="topbar-link">Support</Link>
+        </nav>
+      )}
+
       <div className="topbar-actions">
         <button
           type="button"
