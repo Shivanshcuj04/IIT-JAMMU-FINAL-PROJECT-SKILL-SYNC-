@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -6,9 +7,17 @@ import AvatarMenu from "./AvatarMenu";
 export default function Navbar({ onToggleSidebar }) {
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <div className="topbar">
+    <div className={`topbar ${scrolled ? "topbar-scrolled" : ""}`}>
       <div className="topbar-left">
         {user && (
           <button
