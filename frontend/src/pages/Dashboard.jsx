@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import Skeleton from "../components/Skeleton";
 
-// Mirrors the thresholds in the backend's User.refreshBadges() so the
-// progress bars shown here always match when a badge actually unlocks.
 const SESSIONS_FOR_VERIFIED_TEACHER = 5;
 const SESSIONS_FOR_MASTER_TEACHER = 20;
 const REVIEWS_FOR_PEER_RATED = 3;
@@ -17,7 +16,23 @@ export default function Dashboard() {
     if (user) api.get(`/users/${user.id}`).then((res) => setProfile(res.data.user));
   }, [user]);
 
-  if (!profile) return <div className="container">Loading...</div>;
+  if (!profile) {
+    return (
+      <div className="container">
+        <Skeleton width="220px" height="32px" style={{ marginBottom: "24px" }} />
+        <div className="stats-grid">
+          {[1, 2, 3, 4].map((i) => (
+            <div className="stat-card" key={i}>
+              <Skeleton width="60px" height="32px" style={{ margin: "0 auto 8px" }} />
+              <Skeleton width="90px" height="14px" style={{ margin: "0 auto" }} />
+            </div>
+          ))}
+        </div>
+        <Skeleton height="90px" style={{ marginTop: "24px", marginBottom: "16px" }} />
+        <Skeleton height="90px" />
+      </div>
+    );
+  }
 
   const teachSkills = profile.skills.filter((s) => s.type === "teach");
   const learnSkills = profile.skills.filter((s) => s.type === "learn");

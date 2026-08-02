@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import Skeleton from "../components/Skeleton";
 
 const GROUPS = [
   { type: "teach", title: "Want to Teach", badgeClass: "badge-offer" },
@@ -50,7 +51,25 @@ export default function Profile() {
     setProfile((p) => ({ ...p, skills: data.skills }));
   };
 
-  if (!profile) return <div className="container">Loading...</div>;
+  if (!profile) {
+  return (
+    <div className="container">
+      <div className="profile-header profile-header-split">
+        <div className="profile-header-half profile-header-left">
+          <Skeleton width="72px" height="72px" style={{ borderRadius: "50%" }} />
+          <div style={{ flex: 1 }}>
+            <Skeleton width="180px" height="26px" style={{ marginBottom: "8px" }} />
+            <Skeleton width="120px" height="16px" />
+          </div>
+        </div>
+      </div>
+      <Skeleton width="80px" height="22px" style={{ marginBottom: "16px" }} />
+      <Skeleton height="70px" style={{ marginBottom: "12px" }} />
+      <Skeleton height="70px" style={{ marginBottom: "12px" }} />
+      <Skeleton height="70px" />
+    </div>
+  );
+}
 
   const initials = profile.name
     .split(" ")

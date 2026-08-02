@@ -3,6 +3,8 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import Footer from "./components/Footer";
+import ScrollProgress from "./components/ScrollProgress";
 import PageTransition from "./components/PageTransition";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -29,6 +31,7 @@ export default function App() {
 
   return (
     <>
+      <ScrollProgress />
       <Navbar onToggleSidebar={() => setSidebarOpen((o) => !o)} />
 
       {user && <Sidebar open={sidebarOpen} onNavigate={() => setSidebarOpen(false)} />}
@@ -51,6 +54,7 @@ export default function App() {
             <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
           </Routes>
         </AnimatePresence>
+        <Footer />
       </main>
 
       <FloatingSupportButton />

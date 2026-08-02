@@ -3,6 +3,7 @@ import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { scheduleSession, getMySessions, completeSession } from "../api/sessions";
 import { leaveReview } from "../api/reviews";
+import Skeleton from "../components/Skeleton";
 
 const emptyForm = { matchId: "", scheduledAt: "", durationMinutes: 60, meetingLink: "" };
 
@@ -143,7 +144,16 @@ export default function Sessions() {
     }
   };
 
-  if (loading) return <div className="container">Loading sessions...</div>;
+  if (loading) {
+  return (
+    <div className="container">
+      <Skeleton width="140px" height="32px" style={{ marginBottom: "24px" }} />
+      <Skeleton height="200px" style={{ marginBottom: "32px", maxWidth: "480px" }} />
+      <Skeleton height="100px" style={{ marginBottom: "12px" }} />
+      <Skeleton height="100px" />
+    </div>
+  );
+}
 
   return (
     <div className="container">
