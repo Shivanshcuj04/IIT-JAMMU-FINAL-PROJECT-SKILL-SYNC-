@@ -16,8 +16,8 @@ export default function Explore() {
     ]);
     setMatches(candidatesRes.data.matches);
 
-    const active = (myMatchesRes.data.matches || []).filter((m) =>
-      ["pending", "accepted"].includes(m.status)
+    const active = (myMatchesRes.data.matches || []).filter(
+      (m) => m.requester && m.receiver && ["pending", "accepted"].includes(m.status)
     );
     const ids = new Set(
       active.map((m) => {

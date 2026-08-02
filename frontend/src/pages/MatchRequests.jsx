@@ -16,11 +16,15 @@ export default function MatchRequests() {
     load();
   };
 
+  // A match whose requester or receiver no longer exists (deleted test
+  // account etc.) can't be rendered meaningfully — skip it instead of crashing.
+  const validMatches = matches.filter((m) => m.requester && m.receiver);
+
   return (
     <div className="container">
       <h2>My Matches</h2>
-      {matches.length === 0 && <p>No matches yet.</p>}
-      {matches.map((m) => {
+      {validMatches.length === 0 && <p>No matches yet.</p>}
+      {validMatches.map((m) => {
         const isReceiver = m.receiver._id === user.id;
         const other = isReceiver ? m.requester : m.receiver;
         return (
