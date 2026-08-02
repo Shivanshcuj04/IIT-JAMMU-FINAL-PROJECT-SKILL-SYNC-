@@ -18,7 +18,8 @@ export default function Footer() {
           <Link to="/explore">Explore</Link>
           <Link to="/sessions">Sessions</Link>
           <Link to="/support">Support</Link>
-          
+
+          <a
             href="https://github.com/Shivanshcuj04/IIT-JAMMU-FINAL-PROJECT-SKILL-SYNC-"
             target="_blank"
             rel="noopener noreferrer"
@@ -27,7 +28,10 @@ export default function Footer() {
           </a>
         </div>
       </div>
-      <p className="footer-copyright">© {year} SkillSync — IIT Jammu MERN Capstone Project</p>
+
+      <p className="footer-copyright">
+        © {year} SkillSync — IIT Jammu MERN Capstone Project
+      </p>
     </footer>
   );
 }
