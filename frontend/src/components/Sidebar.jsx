@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
 const LINKS = [
   { to: "/explore", label: "Explore" },
@@ -11,10 +12,16 @@ const LINKS = [
 
 export default function Sidebar({ open, onNavigate }) {
   const location = useLocation();
+  const { user } = useAuth();
+
+  const links =
+    user?.role === "admin"
+      ? [...LINKS, { to: "/admin", label: "Admin Panel" }]
+      : LINKS;
 
   return (
     <nav className={`sidebar ${open ? "sidebar-open" : ""}`} aria-label="Main navigation">
-      {LINKS.map((link) => {
+      {links.map((link) => {
         const isActive = location.pathname === link.to;
         return (
           <NavLink

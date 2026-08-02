@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import Support from "./pages/Support";
 import Chat from "./pages/Chat";
 import Sessions from "./pages/Sessions";
+import AdminDashboard from "./pages/AdminDashboard";
 import FloatingSupportButton from "./components/FloatingSupportButton";
 import { useAuth } from "./context/AuthContext";
 
@@ -24,10 +25,18 @@ function PrivateRoute({ children }) {
   return user ? children : <Navigate to="/login" />;
 }
 
+function AdminRoute({ children }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" />;
+  return user.role === "admin" ? children : <Navigate to="/dashboard" />;
+}
+
 export default function App() {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+
+  const isLandingPage = location.pathname === "/";
 
   return (
     <>
@@ -52,9 +61,10 @@ export default function App() {
             <Route path="/sessions" element={<PrivateRoute><PageTransition><Sessions /></PageTransition></PrivateRoute>} />
             <Route path="/dashboard" element={<PrivateRoute><PageTransition><Dashboard /></PageTransition></PrivateRoute>} />
             <Route path="/support" element={<PageTransition><Support /></PageTransition>} />
+            <Route path="/admin" element={<AdminRoute><PageTransition><AdminDashboard /></PageTransition></AdminRoute>} />
           </Routes>
         </AnimatePresence>
-        <Footer />
+        {isLandingPage && <Footer />}
       </main>
 
       <FloatingSupportButton />
