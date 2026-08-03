@@ -138,56 +138,111 @@ A platform where users can **list skills they can teach** and **skills they want
 ## 📁 Project Structure
 ```
 IIT-JAMMU-FINAL-PROJECT-SKILL-SYNC-/
+│
 ├── backend/
 │   ├── config/
 │   │   └── db.js
+│   │
 │   ├── controllers/
+│   │   ├── adminController.js
 │   │   ├── authController.js
 │   │   ├── matchController.js
+│   │   ├── messageController.js
 │   │   ├── reviewController.js
 │   │   ├── sessionController.js
+│   │   ├── supportController.js
 │   │   └── userController.js
+│   │
 │   ├── middleware/
 │   │   └── auth.js
+│   │
 │   ├── models/
 │   │   ├── Match.js
+│   │   ├── Message.js
+│   │   ├── Report.js
 │   │   ├── Review.js
-│   │   ├── Session.js
-│   │   └── User.js
+│   │  ├── Session.js
+│   │  ├── SupportTicket.js
+│   │  └── User.js
+│   │
 │   ├── routes/
+│   │   ├── adminRoutes.js
 │   │   ├── authRoutes.js
 │   │   ├── matchRoutes.js
+│   │   ├── messageRoutes.js
 │   │   ├── reviewRoutes.js
 │   │   ├── sessionRoutes.js
+│   │   ├── support.js
 │   │   └── userRoutes.js
+│   │
 │   ├── utils/
+│   │   └── matchingLogic.js
+│   │
 │   ├── .env
 │   ├── .gitignore
 │   ├── package.json
+│   ├── package-lock.json
 │   └── server.js
 │
-└── frontend/
-    ├── src/
-    │   ├── api/
-    │   │   └── axios.js
-    │   ├── components/
-    │   │   ├── Navbar.jsx
-    │   │   └── SkillCard.jsx
-    │   ├── context/
-    │   │   └── AuthContext.jsx
-    │   ├── pages/
-    │   │   ├── Explore.jsx
-    │   │   ├── Home.jsx
-    │   │   ├── Login.jsx
-    │   │   ├── MatchRequests.jsx
-    │   │   ├── Profile.jsx
-    │   │   └── Register.jsx
-    │   ├── App.jsx
-    │   ├── index.css
-    │   └── main.jsx
-    ├── index.html
-    ├── package.json
-    └── vite.config.js
+├── frontend/
+│   ├── src/
+│   │
+│   │   ├── api/
+│   │   │   ├── admin.js
+│   │   │   ├── axios.js
+│   │   │   ├── reviews.js
+│   │   │   ├── sessions.js
+│   │   │   └── support.js
+│   │   │
+│   │   ├── components/
+│   │   │   ├── AvatarMenu.jsx
+│   │   │   ├── FAQAccordion.jsx
+│   │   │   ├── FloatingSupportButton.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── PageTransition.jsx
+│   │   │   ├── PasswordField.jsx
+│   │   │   ├── ScrollProgress.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── Skeleton.jsx
+│   │   │   ├── SkillCard.jsx
+│   │   │   └── SupportContactForm.jsx
+│   │   │
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx
+│   │   │   └── ThemeContext.jsx
+│   │   │
+│   │   ├── data/
+│   │   │   └── faqs.js
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── AdminDashboard.jsx
+│   │   │   ├── Chat.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Explore.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── MatchRequests.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Sessions.jsx
+│   │   │   └── Support.jsx
+│   │   │
+│   │   ├── utils/
+│   │   │   └── passwordStrength.js
+│   │   │
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   │
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   └── vite.config.js
+│
+├── .gitignore
+├── README.md
+└── vercel.json
 ```
 
 ---
